@@ -6,14 +6,10 @@
   <meta charset="UTF-8" />
   <title>Geolokacija</title>
 
-	<script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
-
-	  
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
-	<script src=" https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js "></script>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
   <style>
     body {
@@ -22,147 +18,141 @@
       padding: 1em;
       background-color: rgba(240, 240, 240, 0.7);
     }
+
     .map {
       width: 100%;
       height: 400px;
       border: 6px solid #ccc;
-background-color: white;
-  margin: 0 auto; 
-  display: block;
+      background-color: white;
+      margin: 0 auto;
+      display: block;
     }
-    .track-label {
-  display: flex;
-  align-items: center;
-font-family: 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 18px;
-  color: #444;
-  margin: 1.5em 0;
-  gap: 0.6em;
-  user-select: none;
-  cursor: pointer;
-}
 
-.track-label input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  accent-color: #3399CC;
-  cursor: pointer;
-}
+    .track-label {
+      display: flex;
+      align-items: center;
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      font-size: 18px;
+      color: #444;
+      margin: 1.5em 0;
+      gap: 0.6em;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .track-label input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: #3399CC;
+      cursor: pointer;
+    }
+
     p {
       font-size: 14px;
     }
-.location-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 1em;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
-.location-card h3 {
-  margin-top: 0;
-  font-size: 18px;
-  text-align: center;
-  color: #333;
-}
+    .location-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 1em;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-.location-card p {
-  margin: 0.5em 0;
-  font-size: 15px;
-  color: #444;
-}
+    .location-card h3 {
+      margin-top: 0;
+      font-size: 18px;
+      text-align: center;
+      color: #333;
+    }
 
-.location-card code {
-  background-color: #f0f0f0;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
+    .location-card p {
+      margin: 0.5em 0;
+      font-size: 15px;
+      color: #444;
+    }
 
-.page-title {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: #555555;
-  margin-bottom: 1em;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-}
-.export-btn {
-  background-color: #666666;
-  color: white;
-  font-size: 14px;
-  padding: 8px 14px;
-  border: 3px solid #ccc;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 0.5em;
-  display: inline-block;
-  font-weight: bold;
-}
+    .location-card code {
+      background-color: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
 
-.export-btn:hover {
-  background-color: #555555
-}
+    .page-title {
+      font-family: 'Segoe UI', 'Roboto', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #555555;
+      margin-bottom: 1em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
 
-.export-btn:focus {
-  outline: none;
-}
+    .export-btn {
+      background-color: #666666;
+      color: white;
+      font-size: 14px;
+      padding: 8px 14px;
+      border: 3px solid #ccc;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 0.5em;
+      display: inline-block;
+      font-weight: bold;
+    }
 
+    .export-btn:hover {
+      background-color: #555555
+    }
+
+    .export-btn:focus {
+      outline: none;
+    }
   </style>
 </head>
+
 <body>
 
   <h2 class="page-title">📍 Geolokacija</h2>
   <div id="map" class="map"></div>
   <div id="info" style="display: none;"></div>
 
-
   <label class="track-label">
     Prati moju lokaciju:
     <input id="track" type="checkbox">
   </label>
-<button id="exportButton" class="export-btn small">Dohvati koordinate</button>
+  <button id="markPointButton" class="export-btn small"> Označi točku</button>
+  <button id="exportButton" class="export-btn small">Dohvati točke</button>
 
-<div class="location-card">
-  <h3>Podaci o lokaciji</h3>
-  <p><strong>Točnost:</strong> <code id="accuracy"></code></p>
-  <p><strong>Visina:</strong> <code id="altitude"></code></p>
-  <p><strong>Koordinate:</strong> <code id="coordinates"></code></p>
-  <p><strong>Pravac:</strong> <code id="heading"></code></p>
-  <p><strong>Brzina:</strong> <code id="speed"></code></p>
-</div>
+  <div class="location-card">
+    <h3>Podaci o lokaciji</h3>
+    <p><strong>Točnost:</strong> <code id="accuracy"></code></p>
+    <p><strong>Visina:</strong> <code id="altitude"></code></p>
+    <p><strong>Koordinate:</strong> <code id="coordinates"></code></p>
+  </div>
 
   <script type="text/javascript">
-  
-proj4.defs('EPSG:3765','+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
-ol.proj.proj4.register(proj4);
-var htrs96 = ol.proj.get('EPSG:3765');
+    proj4.defs('EPSG:3765', '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+    ol.proj.proj4.register(proj4);
+    var htrs96 = ol.proj.get('EPSG:3765');
 
-
-const DOF = new ol.layer.Tile({
-            title: 'DOF 2011',
-            type: 'base',
-            visible: true,
-            source: new ol.source.TileWMS({
-            url: 'https://geoportal.dgu.hr/services/inspire/orthophoto_lidar_2022_2023/wms',
-	    //url: 'https://geoportal.dgu.hr/services/inspire/orthophoto_2011/wms',
-            params: {'LAYERS': 'OI.OrthoimageCoverage', 'TILED': true} 
-	    //params: {'LAYERS': 'OrthoImagery', 'TILED': true}                  
-                    })
- });   
-
-
-
-
-
+    const DOF = new ol.layer.Tile({
+      title: 'DOF 2011',
+      type: 'base',
+      visible: true,
+      source: new ol.source.TileWMS({
+        url: 'https://geoportal.dgu.hr/services/inspire/orthophoto_lidar_2022_2023/wms',
+        params: { 'LAYERS': 'OI.OrthoimageCoverage', 'TILED': true }
+      })
+    });
 
     var view = new ol.View({
-projection: htrs96,
-          minResolution: 0.05,
+      projection: htrs96,
+      minResolution: 0.05,
       center: [486700, 4925639],
       zoom: 7,
     });
@@ -172,9 +162,8 @@ projection: htrs96,
       view: view
     });
 
-map.addLayer(DOF);
-DOF.setVisible (true);
-
+    map.addLayer(DOF);
+    DOF.setVisible(true);
 
     const geolocation = new ol.Geolocation({
       trackingOptions: {
@@ -186,18 +175,22 @@ DOF.setVisible (true);
     function el(id) {
       return document.getElementById(id);
     }
-let followPosition = false;
-    el('track').addEventListener('change', function () {
- followPosition = this.checked;
-      geolocation.setTracking(this.checked);
-    });
+
+    let followPosition = false;
+el('track').addEventListener('change', function () {
+  followPosition = this.checked;
+  geolocation.setTracking(this.checked);
+
+  // Dodaj/ukloni marker s karte
+  if (!this.checked) {
+    positionFeature.setGeometry(null);
+    accuracyFeature.setGeometry(null);
+  }
+});
 
     geolocation.on('change', function () {
       el('accuracy').innerText = (geolocation.getAccuracy() || '-') + ' m';
       el('altitude').innerText = (geolocation.getAltitude() || '-') + ' m';
-      el('altitudeAccuracy').innerText = (geolocation.getAltitudeAccuracy() || '-') + ' m';
-      el('heading').innerText = (geolocation.getHeading() || '-') + ' rad';
-      el('speed').innerText = (geolocation.getSpeed() || '-') + ' m/s';
     });
 
     geolocation.on('error', function (error) {
@@ -224,30 +217,21 @@ let followPosition = false;
 
     geolocation.on('change:position', function () {
       const coordinates = geolocation.getPosition();
-
       positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
 
-  if (coordinates) {
-    const x = coordinates[0].toFixed(2);
-    const y = coordinates[1].toFixed(2);
-    el('coordinates').innerText = `${x}, ${y}`;
-  } else {
-    el('coordinates').innerText = '-';
-  }
+      if (coordinates) {
+        const x = coordinates[0].toFixed(2);
+        const y = coordinates[1].toFixed(2);
+        el('coordinates').innerText = `${x}, ${y}`;
+      } else {
+        el('coordinates').innerText = '-';
+      }
 
-
-
-
-  if (followPosition && coordinates) {
-    view.setCenter(coordinates);
-    view.setZoom(19); // ili neka druga razina prema želji
-
-   const heading = geolocation.getHeading();
-    if (typeof heading === 'number' && !isNaN(heading)) {
-      view.setRotation(-heading); // negativno jer OL rotira suprotno od smjera kazaljke
-    }
-  }
-});
+      if (followPosition && coordinates) {
+        view.setCenter(coordinates);
+        view.setZoom(19);
+      }
+    });
 
     const vectorLayer = new ol.layer.Vector({
       source: new ol.source.Vector({
@@ -256,32 +240,75 @@ let followPosition = false;
     });
 
     map.addLayer(vectorLayer);
-document.getElementById('exportButton').addEventListener('click', function() {
+
+   document.getElementById('exportButton').addEventListener('click', function () {
+  const features = vectorLayer.getSource().getFeatures();
+
+  const geojsonFeatures = features
+    .filter(f => f.get('name'))
+    .map(f => {
+      const coords = f.getGeometry().getCoordinates();
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: coords
+        },
+        properties: {
+          name: f.get('name')
+        }
+      };
+    });
+
+  if (geojsonFeatures.length === 0) {
+    alert('Nema označenih točaka za izvoz.');
+    return;
+  }
+
+  const geojson = {
+    type: "FeatureCollection",
+    features: geojsonFeatures
+  };
+
+  const geojsonStr = JSON.stringify(geojson, null, 2);
+  const blob = new Blob([geojsonStr], { type: 'application/json' });
+  saveAs(blob, 'oznake-tocaka.geojson');
+});
+
+document.getElementById('markPointButton').addEventListener('click', function () {
   const coordinates = geolocation.getPosition();
 
   if (coordinates) {
-    const geojson = {
-      "type": "FeatureCollection",
-      "features": [{
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": coordinates
-        },
-        "properties": {
-          "name": "Moja lokacija",
-          "timestamp": new Date().toISOString()
-        }
-      }]
-    };
+    const naziv = prompt('Unesite naziv točke:');
+    if (!naziv) return;
 
-    const geojsonStr = JSON.stringify(geojson, null, 2);
-    const blob = new Blob([geojsonStr], { type: 'application/json' });
-    saveAs(blob, 'moja-lokacija.geojson');
+    const pointFeature = new ol.Feature({
+      geometry: new ol.geom.Point(coordinates),
+      name: naziv
+    });
+
+    pointFeature.setStyle(new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 6,
+        fill: new ol.style.Fill({ color: '#000000' }), // crna točka
+        stroke: new ol.style.Stroke({ color: '#ffffff', width: 2 }) // bijeli rub
+      }),
+      text: new ol.style.Text({
+        text: naziv,
+        offsetY: -15,
+        font: '14px sans-serif',
+        fill: new ol.style.Fill({ color: '#000000' }), // crni tekst
+        stroke: new ol.style.Stroke({ color: '#ffffff', width: 3 }) // bijeli obrub teksta radi čitljivosti
+      })
+    }));
+
+    vectorLayer.getSource().addFeature(pointFeature);
   } else {
-    alert('Trenutno nije dostupna vaša lokacija.');
+    alert('Lokacija nije dostupna.');
   }
 });
+
   </script>
 </body>
+
 </html>
