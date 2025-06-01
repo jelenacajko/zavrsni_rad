@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Geolokacija</title>
+  <title>Geokolektor</title>
 
   <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
@@ -134,6 +134,7 @@
   </div>
 
   <script type="text/javascript">
+//Registracija HTRS96
     proj4.defs('EPSG:3765', '+proj=tmerc +lat_0=0 +lon_0=16.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
     ol.proj.proj4.register(proj4);
     var htrs96 = ol.proj.get('EPSG:3765');
@@ -148,14 +149,14 @@
       })
     });
 
-    var view = new ol.View({
+    const view = new ol.View({
       projection: htrs96,
       minResolution: 0.05,
       center: [486700, 4925639],
       zoom: 7,
     });
 
-    var map = new ol.Map({
+    const map = new ol.Map({
       target: 'map',
       view: view
     });
@@ -163,6 +164,7 @@
     map.addLayer(DOF);
     DOF.setVisible(true);
 
+//Praćenje lokacije u stvarnom vremenu
     const geolocation = new ol.Geolocation({
       trackingOptions: {
         enableHighAccuracy: true,
@@ -174,6 +176,7 @@
       return document.getElementById(id);
     }
 
+//Pokretanje i zaustavljanje praćenja ovisno o checkbox-u
     let followPosition = false;
 el('track').addEventListener('change', function () {
   followPosition = this.checked;
@@ -182,7 +185,7 @@ el('track').addEventListener('change', function () {
  
   if (!this.checked) {
     positionFeature.setGeometry(null);
-    accuracyFeature.setGeometry(null);
+    accuracyFeature.setGeometry(null); 
   }
 });
 
@@ -191,17 +194,20 @@ el('track').addEventListener('change', function () {
       el('altitude').innerText = (geolocation.getAltitude() || '-') + ' m';
     });
 
+//Upravljanje greškama
     geolocation.on('error', function (error) {
       const info = document.getElementById('info');
       info.innerHTML = error.message;
       info.style.display = '';
     });
 
+//Objekt za krug točnosi
     const accuracyFeature = new ol.Feature();
     geolocation.on('change:accuracyGeometry', function () {
       accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
     });
 
+//Objekt za točku pozicije
     const positionFeature = new ol.Feature();
     positionFeature.setStyle(
       new ol.style.Style({
@@ -213,6 +219,7 @@ el('track').addEventListener('change', function () {
       })
     );
 
+//Ažurira točku i centar karte
     geolocation.on('change:position', function () {
       const coordinates = geolocation.getPosition();
       positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
@@ -231,6 +238,7 @@ el('track').addEventListener('change', function () {
       }
     });
 
+//Vektorski sloj s točkom lokacije i područjem točnosti
     const vectorLayer = new ol.layer.Vector({
       source: new ol.source.Vector({
         features: [accuracyFeature, positionFeature],
@@ -239,6 +247,8 @@ el('track').addEventListener('change', function () {
 
     map.addLayer(vectorLayer);
 
+
+//Gumb za spremanje točaka u GeoJSON datoteku
    document.getElementById('exportButton').addEventListener('click', function () {
   const features = vectorLayer.getSource().getFeatures();
 
@@ -273,6 +283,8 @@ el('track').addEventListener('change', function () {
   saveAs(blob, 'oznake-tocaka.geojson');
 });
 
+
+//Gumb za dodavanje točke na trenutnu lokaciju
 document.getElementById('markPointButton').addEventListener('click', function () {
   const coordinates = geolocation.getPosition();
 
